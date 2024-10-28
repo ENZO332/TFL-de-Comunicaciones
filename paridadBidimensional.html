@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paridad Bidimensional</title>
+    <link rel="stylesheet" href="./estilos/styles.css">
+    <link rel="stylesheet" href="./estilos/functionality.css">
+    <script src="./controlador.js" defer></script>
+    <script src="./funcionesAuxiliares.js" defer></script>
+</head>
+<body>
+<div class="header">
+    <button><a class="backAnchor" href="./index.html">Volver</a></button>
+    <h1>Transmisión de datos con Control de Paridad Bidimensional</h1>
+</div>
+
+<div class="content">
+
+    <div class="cardBlock emisor">
+
+        <h2>Emisor</h2>
+
+        <div class="emisor-formMensaje">
+            <label class="emisor-labelMensaje">Mensaje a enviar (máximo de 8 caracteres):</label>
+            <form onsubmit="mensajeABloqueDeBits(event)">
+                <input type="text" class="inputTextMensaje" id="textMensaje" required><input type="submit" class="inputSubmitMensaje">
+            </form>
+        </div>
+        
+        <div class="emisor-datosAEnviar">
+            <label>Bloque de datos + caracteres de paridad:</label>
+
+            <div>
+                <table class="table-datos" id="emisorTableDatos">
+
+                </table>
+            </div>
+
+        </div>
+        
+        <div id="emisorSimularError">
+            
+            <form>
+                
+            </form>
+        </div>
+
+    </div>
+
+    <div class="cardBlock receptor">
+        <h2>Receptor</h2>
+    </div>
+    
+</div>
+    
+
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+body{
+    font-size: 3vh;
+}
+
+.header {
+    display: flex;
+    padding-left: 3vh;
+    margin-top: 2vh;
+    background-color: #55e9ff;
+}
+
+.content {
+    display: flex;
+    /*padding: 5vh;*/
+}
+
+.backAnchor {
+    color:black;
+    font-size: 2.5vh;
+}
+
+button {
+    padding: 1vh 1vh 1vh 1.5vh;
+    align-self: center;
+}
+
+button:hover{
+    background-color: #8ad;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 10vh;
+}
+
+h2{
+    margin: 0;
+    text-align: center;
+    font-size: 4vh;
+}
+
+.cardBlock {
+    width: 105vh;
+    height: 85vh;
+    margin: 3vh;
+    box-sizing: border-box;
+    padding: 3vh;
+}
+
+.emisor {
+    background-color: #00aaffe5;
+}
+
+.receptor {
+    background-color: #005599e5;
+}
+
+.emisor-labelMensaje{
+    padding-right: 2vh;
+}
+
+.emisor-formMensaje{
+    display: flex;
+    margin-top: 2vh;
+}
+
+.inputTextMensaje {
+    /*height: 3vh;*/
+    width: 20vh;
+    font-size: 2.5vh;
+}
+
+.inputSubmitMensaje {
+    /*height: 4vh;*/
+    width: 10vh;
+    font-size: 2.5vh;
+    cursor: pointer;
+}
+
+.emisor-datosAEnviar {
+    margin-top: 2vh;
+}
+
+.table-datos {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    text-align: center;
+    border: 1px solid black;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-th {
+    border: 1px solid black;
+    
+}
+
+.table-td {
+    border: 1px solid black;
+    
+}

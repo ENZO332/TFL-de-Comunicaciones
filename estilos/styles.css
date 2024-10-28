@@ -1,0 +1,19 @@
+body{
+    margin: 0;
+    background: url("./background-image.jpg");
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+h1{
+    font-size: 6vh;
+    font-weight: 900;
+    text-align: center;
+}
+
+a{
+    text-decoration: none;
+}
+
+button{
+    cursor: pointer;
+}

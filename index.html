@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFL COMUNICACIONES</title>
+    <link rel="stylesheet" href="./estilos/styles.css">
+    <link rel="stylesheet" href="./estilos/mainPage.css">
+</head>
+<body>
+    <div class="cardMain">
+        <h1>APP WEB Control de Paridad Bidimensional</h1>
+        <p>¿Cómo funciona?</p>
+        <ol class="olMain">
+            <li>Se ingresa un texto a enviar</li>
+            <li>El texto se codifica en ASCII</li>
+            <li>Se calculan los caracteres LRC y VRC</li>
+            <li>Se configura el bloque de datos a enviar + los caracteres de paridad.</li>
+            <li>Se transmiten los datos al receptor(se pueden simular distintos dipos de ruido).</li>
+            <li>El receptor recalcula los caracteres LRC y VRC y los compara con los recibidos.</li>
+            <li>En base a la comparación y según el tipo de error se pueden: corregir, detectar o no detectar los bits erróneos.</li>
+        </ol>
+        <button><a class="mainAnchor" href="./paridadBidimensional.html">Comenzar</a></button>
+    </div>
+
+</body>
+</html>
