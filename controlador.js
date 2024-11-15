@@ -178,6 +178,15 @@ const mensajeABloqueDeBits = (event) =>{
         divSimularError.appendChild(select);
         divSimularError.appendChild(buttonSend);
 
+        tablaReceptor = document.getElementById( 'receptorTableDatos');
+        tablaReceptor.innerHTML='';
+        
+        divControlarError = document.getElementById('receptorControlarError');
+        divControlarError.innerHTML='';
+
+        mensajeError = document.getElementById('mensajeError');
+        mensajeError.innerHTML ='';
+
     }
 
 }

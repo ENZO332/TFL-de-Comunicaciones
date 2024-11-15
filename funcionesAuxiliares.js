@@ -315,7 +315,7 @@ const detectarErrores = () =>{
     if (celdasDistintasVRC.length === 0 && celdasDistintasLRC.length === 0) {
         mensajeError = 'No se detectó ningún error';
     } else if (celdasDistintasVRC.length === 1 && celdasDistintasLRC.length === 1) {
-        mensajeError = `Se detectó un error en la fila: ${celdasDistintasLRC[0]}, columna: ${celdasDistintasVRC[0]}. Se puede corregir.`;
+        mensajeError = `Se detectó un error en la fila: ${celdasDistintasLRC[0]+1}, columna: ${celdasDistintasVRC[0]+1}. Se puede corregir.`;
     } else {
         mensajeError = 'Se detectó un error, pero no es posible determinar su ubicación exacta. No se puede corregir.';
     }
@@ -327,7 +327,7 @@ const detectarErrores = () =>{
 
 //console.log(random(2,0));
 
-errorAisladoSimple(scrambling(stringToASCII("ENZO")), calcularVRC(scrambling(stringToASCII("ENZO"))), calcularLRC(scrambling(stringToASCII("ENZO")),calcularVRC(scrambling(stringToASCII("ENZO")))))
+//errorAisladoSimple(scrambling(stringToASCII("ENZO")), calcularVRC(scrambling(stringToASCII("ENZO"))), calcularLRC(scrambling(stringToASCII("ENZO")),calcularVRC(scrambling(stringToASCII("ENZO")))))
 //console.log(scrambling(stringToASCII("NIGGA")));
 
 
