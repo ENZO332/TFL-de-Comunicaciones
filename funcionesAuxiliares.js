@@ -142,79 +142,83 @@ const calcularLRC = (bloqueAEnviar, VRC) => {
 
 }
 
-const random = (max, min) => {
-    let num = Math.floor(Math.random()*(max-min+1)+min);
-    return num;
+function random(max, min) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const ruidoEnUnBitMatriz = (bloqueAEnviar, m) =>{
+// Función auxiliar para verificar si una posición en la matriz ya fue modificada
+const posicionYaModificada = (posicionesModificadas, fila, columna) => {
+    return posicionesModificadas.some(pos => pos.fila === fila && pos.columna === columna);
+};
+
+const ruidoEnUnBitMatriz = (bloqueAEnviar, m, posicionesModificadas) =>{
+    // Crear una copia de la matriz original
+    let nuevoBloque = bloqueAEnviar.map(row => [...row]);
     
-    const filaAModificar = random(bloqueAEnviar.length-1,0);
-
-    const columnaAModificar = random(m-1,0);
-
-    console.log(filaAModificar)
-
-    console.log(columnaAModificar)
-
-    for (let i = 0; i < bloqueAEnviar.length; i++) {
-
-        let fila = "";
-
-        for(let j = 0; j < m; j++){  //se recorren bits de un dato
-
-            if(i==filaAModificar && j==columnaAModificar){
-
-                if(bloqueAEnviar[i][j]=="1"){
-
-                    fila = fila + "0";
-
-                }else{
-                    fila = fila + "1";
-                }
-
-            }else{
-                fila = fila + bloqueAEnviar[i][j];
-            }
-        }
-
-        bloqueAEnviar[i]=fila;
-    }
+    let filaAModificar, columnaAModificar;
     
-    
-    return bloqueAEnviar;
+    // Intentar encontrar una posición que no haya sido modificada
+    do {
+        filaAModificar = random(bloqueAEnviar.length - 1, 0);
+        columnaAModificar = random(m - 1, 0);
+    } while (posicionYaModificada(posicionesModificadas, filaAModificar, columnaAModificar));
+
+    // Guardar la posición modificada
+    posicionesModificadas.push({ fila: filaAModificar, columna: columnaAModificar });
+
+    console.log(`Modificando fila: ${filaAModificar}, columna: ${columnaAModificar}`);   
+
+    // Realizar la modificación en la copia
+    nuevoBloque[filaAModificar][columnaAModificar] = (nuevoBloque[filaAModificar][columnaAModificar] == "1") ? "0" : "1";
+
+    return nuevoBloque;  // Devolver la copia modificada
 }
 
-const ruidoEnUnBitArray = (array) =>{
-    const celdaAModificar = random(array.length-1,0);
+const ruidoEnUnBitArray = (array, posicionesModificadas) =>{
+    let celdaAModificar;
 
-    console.log(celdaAModificar);
+    // Intentar encontrar una posición que no haya sido modificada
+    do {
+        celdaAModificar = random(array.length - 1, 0);
+    } while (posicionesModificadas.includes(celdaAModificar));
+
+    // Guardar la posición modificada
+    posicionesModificadas.push(celdaAModificar);
+
+    console.log(`Modificando índice: ${celdaAModificar}`);
 
     let fila = [];
 
-    for(let i = 0; i < array.length; i++){  //se recorren bits de un dato
-
-        if(i==celdaAModificar){
-
-            if(array[i]=="1"){
-
-                fila[i] = "0";
-
-            }else{
-                fila[i] = "1";
-            }
-
-        }else{
+    for (let i = 0; i < array.length; i++) {
+        if (i == celdaAModificar) {
+            fila[i] = (array[i] == "1") ? "0" : "1";
+        } else {
             fila[i] = array[i];
         }
     }
 
-    array = fila;
+    return fila;
+}
 
-    return array;
+const sinError = () =>{
+    bloqueRecibido = bloqueAEnviar;
+    receptorVRC = emisorVRC;
+    receptorLRC = emisorLRC;
+    return;
 }
 
 const errorAisladoSimple = (bloqueAEnviar, VRC, LRC) =>{
+    // Estructuras para almacenar posiciones modificadas
+    let posicionesModificadas = {
+        bloque: [], // Array de objetos con {fila, columna} para las posiciones modificadas en bloqueAEnviar
+        VRC: [], // Array con índices modificados en VRC
+        LRC: []  // Array con índices modificados en LRC
+    };
+
+    // Crear copias profundas para evitar modificar los datos originales
+    receptorVRC = [...emisorVRC];  // Copia del array
+    receptorLRC = [...emisorLRC];  // Copia del array
+    bloqueRecibido = [...bloqueAEnviar];  // Copia superficial de un array unidimensional (si es bidimensional, ver siguiente punto)
 
     const m = VRC.length;
     let bloqueAModificar = random(2,0);
@@ -222,32 +226,104 @@ const errorAisladoSimple = (bloqueAEnviar, VRC, LRC) =>{
     switch (bloqueAModificar) {
         case 0:
             console.log("casoBloque");
-            bloqueRecibido = ruidoEnUnBitMatriz(bloqueAEnviar, m);
-            receptorVRC = emisorVRC;
-            receptorLRC = emisorLRC;
+            bloqueRecibido = ruidoEnUnBitMatriz([...bloqueAEnviar], m, posicionesModificadas.bloque);
             break;
         
         case 1:
             console.log("casoVRC");
-            receptorVRC = ruidoEnUnBitArray(VRC);
-            bloqueRecibido = bloqueAEnviar;
-            receptorLRC = emisorLRC;
+            receptorVRC = ruidoEnUnBitArray([...emisorVRC], posicionesModificadas.VRC);
             break;
 
         case 2: 
             console.log("casoLRC");
-            receptorLRC = ruidoEnUnBitArray(LRC);
-            receptorVRC = emisorVRC;
-            receptorLRC = emisorLRC;
+            receptorLRC = ruidoEnUnBitArray([...emisorLRC], posicionesModificadas.LRC);
             break;
 
         default:
             break;
     }
-    
-
 
 } 
+
+const errorAisladoDoble = (bloque, VRC, LRC) =>{
+    // Estructuras para almacenar posiciones modificadas
+    let posicionesModificadas = {
+        bloque: [], // Array de objetos con {fila, columna} para las posiciones modificadas en bloqueAEnviar
+        VRC: [], // Array con índices modificados en VRC
+        LRC: []  // Array con índices modificados en LRC
+    };
+
+    for (let i = 0; i < 2; i++) {
+        const m = VRC.length;
+        let bloqueAModificar = random(2,0);
+
+        switch (bloqueAModificar) {
+            case 0:
+                console.log("casoBloque");
+                bloque = ruidoEnUnBitMatriz(bloque, m, posicionesModificadas.bloque);
+                break;
+
+            case 1:
+                console.log("casoVRC");
+                VRC = ruidoEnUnBitArray(VRC, posicionesModificadas.VRC);
+                break;
+
+            case 2: 
+                console.log("casoLRC");
+                LRC = ruidoEnUnBitArray(LRC, posicionesModificadas.LRC);
+                break;
+
+            default:
+                break;
+        }
+        
+    }
+
+    receptorLRC = LRC;
+    receptorVRC = VRC;
+    bloqueRecibido = bloque;
+    
+} 
+
+const detectarErrores = () =>{
+
+    const calculadoVRC = calcularVRC(bloqueRecibido);
+    const calculadoLRC = calcularLRC(bloqueRecibido, calculadoVRC);
+
+    const celdasDistintasVRC = [];
+    const celdasDistintasLRC = [];
+    let mensajeError = '';
+
+    for (let i = 0; i < calculadoVRC.length; i++) {
+        if(calculadoVRC[i] !== receptorVRC[i]){
+            celdasDistintasVRC.push(i);
+        }
+    }
+
+    for (let i = 0; i < calculadoLRC.length-1; i++) {
+        
+        if(calculadoLRC[i] !== receptorLRC[i]){
+            celdasDistintasLRC.push(i);
+        }
+        
+    }
+    
+    console.log('celdasDistintasVRC:', celdasDistintasVRC);
+    console.log('celdasDistintasLRC:', celdasDistintasLRC);
+
+    // Lógica para determinar el tipo de error
+    if (celdasDistintasVRC.length === 0 && celdasDistintasLRC.length === 0) {
+        mensajeError = 'No se detectó ningún error';
+    } else if (celdasDistintasVRC.length === 1 && celdasDistintasLRC.length === 1) {
+        mensajeError = `Se detectó un error en la fila: ${celdasDistintasLRC[0]}, columna: ${celdasDistintasVRC[0]}. Se puede corregir.`;
+    } else {
+        mensajeError = 'Se detectó un error, pero no es posible determinar su ubicación exacta. No se puede corregir.';
+    }
+
+    let label = document.getElementById('mensajeError');
+    label.textContent= mensajeError;
+
+}
 
 //console.log(random(2,0));
 

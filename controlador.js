@@ -140,29 +140,95 @@ const mensajeABloqueDeBits = (event) =>{
 
         emisorVRC = calcularVRC(scrambling(stringToASCII(textoMensaje)));
 
-        console.log("VRC: "+emisorVRC);
-
         emisorLRC = calcularLRC(scrambling(stringToASCII(textoMensaje)), emisorVRC);
-
-        console.log("LRC: "+emisorLRC);
 
         renderTable(bloqueAEnviar, 'emisorTableDatos', emisorVRC, emisorLRC); //Renderizar tabla
 
+        //se crean componentes en el emisor para la simulación de errores y la transmisiòn de los datos
         divSimularError = document.getElementById('emisorSimularError');
 
         divSimularError.innerHTML = '';
 
         let label = document.createElement('label');
-        label.innerHTML = `<label class="emisor-simularErrorLabel">Simular error: </label>`
+        label.textContent = 'Simular un error: ';
+
+        let select = document.createElement('select');
+        select.className = 'emisor-simularErrorSelect';
+        select.id = 'errorSelect'; // Asignar un id al select
+
+        let options = [
+            { value: 0, text: 'SIN ERROR' },
+            { value: 1, text: 'ERROR AISLADO SIMPLE' },
+            { value: 2, text: 'ERROR AISLADO DOBLE' }
+        ];
+        options.forEach(optionData => {
+            let option = document.createElement('option');
+            option.value = optionData.value;
+            option.textContent = optionData.text;
+            select.appendChild(option);
+        });
+
+        let buttonSend = document.createElement('button');
+        buttonSend.className='emisor-sendDataButton';
+        buttonSend.textContent='Enviar';
+        // Agregar el evento onClick al botón
+        buttonSend.onclick= transmisionDeMensajeAlReceptor;
 
         divSimularError.appendChild(label);
+        divSimularError.appendChild(select);
+        divSimularError.appendChild(buttonSend);
 
-        errorAisladoSimple(bloqueAEnviar, emisorVRC, receptorLRC);
-        console.log("Fin de prueba");
-        console.log(bloqueRecibido);
-        console.log(receptorVRC);
-        console.log(emisorLRC);
     }
 
 }
 
+const transmisionDeMensajeAlReceptor = (event) =>{
+    event.preventDefault();
+    const optionValue = parseInt(document.getElementById('errorSelect').value);
+
+    switch (optionValue) {
+        case 0:
+            console.log("caso: SIN ERROR");
+            sinError(bloqueAEnviar, emisorVRC, emisorLRC);
+            renderTable(bloqueRecibido,'receptorTableDatos', receptorVRC, receptorLRC);
+            break;
+        
+        case 1:
+            console.log("caso: ERROR AISLADO SIMPLE");
+            errorAisladoSimple(bloqueAEnviar, emisorVRC, emisorLRC);
+            renderTable(bloqueRecibido,'receptorTableDatos', receptorVRC, receptorLRC);
+            break;
+
+        case 2: 
+            console.log("caso: ERROR AISLADO DOBLE");
+            errorAisladoDoble(bloqueAEnviar, emisorVRC, emisorLRC);
+            renderTable(bloqueRecibido,'receptorTableDatos', receptorVRC, receptorLRC);
+            break;
+
+        default:
+            break;
+    }
+
+    divControlarError = document.getElementById('receptorControlarError');
+    divControlarError.innerHTML = '';
+
+    let labelControl = document.createElement('label');
+    labelControl.textContent = 'Control de errores: ';
+
+    let buttonControl = document.createElement('button');
+    buttonControl.textContent = 'DETECTAR ERRORES';
+    buttonControl.onclick = detectarErrores;
+
+    let labelMensajeError = document.getElementById('mensajeError');
+    labelMensajeError.textContent = '';
+
+    divControlarError.appendChild(labelControl);
+    divControlarError.appendChild(buttonControl);
+
+    /*
+    console.log("Fin de prueba");
+    console.log(bloqueRecibido);
+    console.log(receptorVRC);
+    console.log(receptorLRC);*/
+
+}
