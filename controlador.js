@@ -194,29 +194,29 @@ const mensajeABloqueDeBits = (event) =>{
 const transmisionDeMensajeAlReceptor = (event) =>{
     event.preventDefault();
     const optionValue = parseInt(document.getElementById('errorSelect').value);
+    let posicionesModificadas;
 
     switch (optionValue) {
         case 0:
             console.log("caso: SIN ERROR");
             sinError(bloqueAEnviar, emisorVRC, emisorLRC);
-            renderTable(bloqueRecibido,'receptorTableDatos', receptorVRC, receptorLRC);
             break;
         
         case 1:
             console.log("caso: ERROR AISLADO SIMPLE");
-            errorAisladoSimple(bloqueAEnviar, emisorVRC, emisorLRC);
-            renderTable(bloqueRecibido,'receptorTableDatos', receptorVRC, receptorLRC);
+            posicionesModificadas = errorAisladoSimple(bloqueAEnviar, emisorVRC, emisorLRC);
             break;
 
         case 2: 
             console.log("caso: ERROR AISLADO DOBLE");
-            errorAisladoDoble(bloqueAEnviar, emisorVRC, emisorLRC);
-            renderTable(bloqueRecibido,'receptorTableDatos', receptorVRC, receptorLRC);
+            posicionesModificadas = errorAisladoDoble(bloqueAEnviar, emisorVRC, emisorLRC);
             break;
 
         default:
             break;
     }
+
+    renderTable(bloqueRecibido,'receptorTableDatos', receptorVRC, receptorLRC);
 
     divControlarError = document.getElementById('receptorControlarError');
     divControlarError.innerHTML = '';
@@ -234,10 +234,96 @@ const transmisionDeMensajeAlReceptor = (event) =>{
     divControlarError.appendChild(labelControl);
     divControlarError.appendChild(buttonControl);
 
-    /*
-    console.log("Fin de prueba");
-    console.log(bloqueRecibido);
-    console.log(receptorVRC);
-    console.log(receptorLRC);*/
+    if (posicionesModificadas) {
+        resaltarErrores(posicionesModificadas);
+    }
 
+}
+
+const detectarErrores = () =>{
+    let paridad = 0;
+    let columnaErrores = [];
+    let filaErrores = [];
+    let mensajeError = '';
+
+    for (let i = 0; i < receptorLRC.length; i++) {
+        paridad = 0;
+        
+        for (let j = 0; j <= receptorVRC.length; j++) {
+            
+            if(j == receptorVRC.length){
+                
+                if(receptorLRC[i]=="1"){
+                    paridad++;
+                }
+            }else{
+                if(i == receptorLRC.length-1){
+                    
+                    if(receptorVRC[j]=="1"){
+                        paridad++
+                    }
+                }else{
+                    
+                    if(bloqueRecibido[i][j]==1){
+                        paridad++;
+                    }
+                }
+                
+            }
+
+        }
+
+        if(paridad % 2 != 0) {
+            filaErrores.push(i);
+        }   
+    }
+
+    console.log('filas erroneas: '+filaErrores);
+
+    for (let j = 0; j <= receptorVRC.length; j++) {
+        paridad = 0;
+        
+        for (let i = 0; i < receptorLRC.length; i++) {
+            
+            if(j == receptorVRC.length){
+                
+                if(receptorLRC[i]=="1"){
+                    paridad++;
+                }
+            }else{
+                if(i == receptorLRC.length-1){
+                    
+                    if(receptorVRC[j]=="1"){
+                        paridad++;
+                    }
+                }else{
+                    
+                    if(bloqueRecibido[i][j]=="1"){
+                        paridad++;
+                    }
+                }
+            }
+        }
+
+        if (paridad % 2 !== 0) {
+            columnaErrores.push(j);
+        }
+    }
+
+    console.log('columnas erroneas: '+columnaErrores);
+
+    if(columnaErrores.length == 0 && filaErrores.length == 0){
+        mensajeError = 'No se detectó ningún error.';
+    } else {
+        if(columnaErrores.length == 1 && filaErrores.length == 1 ){
+            mensajeError = `Se detectó un error en la fila: ${filaErrores[0]+1}, columna: ${columnaErrores[0]+1}. Se puede corregir.`;
+            resaltarFilasYColumnas(filaErrores, columnaErrores);
+        }else{
+            mensajeError = 'Se detectó un error, pero no es posible determinar su ubicación exacta. No se puede corregir.'
+            resaltarFilasYColumnas(filaErrores, columnaErrores);
+        }
+    }
+
+    let label = document.getElementById('mensajeError');
+    label.textContent= mensajeError;
 }

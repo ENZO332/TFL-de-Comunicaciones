@@ -243,6 +243,7 @@ const errorAisladoSimple = (bloqueAEnviar, VRC, LRC) =>{
             break;
     }
 
+    return posicionesModificadas;
 } 
 
 const errorAisladoDoble = (bloque, VRC, LRC) =>{
@@ -282,34 +283,73 @@ const errorAisladoDoble = (bloque, VRC, LRC) =>{
     receptorLRC = LRC;
     receptorVRC = VRC;
     bloqueRecibido = bloque;
-    
-} 
 
+    return posicionesModificadas;
+    
+}
+
+const resaltarErrores = (posicionesModificadas) => {
+    // Resaltar errores en el bloque
+    posicionesModificadas.bloque.forEach(pos => {
+        const { fila, columna } = pos;
+        // Selecciona la celda correspondiente en la tabla (ajusta el selector según la estructura de la tabla)
+        const celda = document.querySelector(`#receptorTableDatos tr:nth-child(${fila + 1}) td:nth-child(${columna + 2})`);
+        if (celda) {
+            celda.style.backgroundColor = '#800';
+        }
+    });
+
+    // Resaltar errores en el VRC
+    posicionesModificadas.VRC.forEach(index => {
+        // Selecciona la celda correspondiente en la tabla del VRC (ajusta el selector según la estructura de la tabla)
+        const celdaVRC = document.querySelector(`#receptorTableDatos tr:last-child td:nth-child(${index + 2})`);
+        if (celdaVRC) {
+            celdaVRC.style.backgroundColor = '#800';
+        }
+    });
+
+    // Resaltar errores en el LRC
+    posicionesModificadas.LRC.forEach(index => {
+        // Selecciona la celda correspondiente en la tabla del LRC (ajusta el selector según la estructura de la tabla)
+        const celdaLRC = document.querySelector(`#receptorTableDatos tr:nth-child(${index + 1}) td:last-child`);
+        if (celdaLRC) {
+            celdaLRC.style.backgroundColor = '#800';
+        }
+    });
+};
+
+const resaltarFilasYColumnas = (filaErrores, columnaErrores) => {
+    const tabla = document.getElementById('receptorTableDatos');
+
+    // Resalta todas las filas que contienen errores (color general)
+    filaErrores.forEach(fila => {
+        for (let col = 0; col < tabla.rows[fila].cells.length; col++) {
+            tabla.rows[fila+1].cells[col].classList.add('error-detected'); // Resalta fila
+        }
+    });
+
+    // Resalta todas las columnas que contienen errores (color general)
+    columnaErrores.forEach(columna => {
+        for (let fila = 0; fila < tabla.rows.length; fila++) {
+            tabla.rows[fila].cells[columna+1].classList.add('error-detected'); // Resalta columna
+        }
+    });
+
+    // Ahora, resalta las celdas donde se cruzan las filas y columnas con errores
+    filaErrores.forEach(fila => {
+        columnaErrores.forEach(columna => {
+            tabla.rows[fila+1].cells[columna+1].classList.remove('error-detected'); // Elimina el color general
+            tabla.rows[fila+1].cells[columna+1].classList.add('exact-error'); // Resalta la celda con un color diferente
+        });
+    });
+
+    
+}
+
+/*
 const detectarErrores = () =>{
 
-    const calculadoVRC = calcularVRC(bloqueRecibido);
-    const calculadoLRC = calcularLRC(bloqueRecibido, calculadoVRC);
-
-    const celdasDistintasVRC = [];
-    const celdasDistintasLRC = [];
-    let mensajeError = '';
-
-    for (let i = 0; i < calculadoVRC.length; i++) {
-        if(calculadoVRC[i] !== receptorVRC[i]){
-            celdasDistintasVRC.push(i);
-        }
-    }
-
-    for (let i = 0; i < calculadoLRC.length-1; i++) {
-        
-        if(calculadoLRC[i] !== receptorLRC[i]){
-            celdasDistintasLRC.push(i);
-        }
-        
-    }
     
-    console.log('celdasDistintasVRC:', celdasDistintasVRC);
-    console.log('celdasDistintasLRC:', celdasDistintasLRC);
 
     // Lógica para determinar el tipo de error
     if (celdasDistintasVRC.length === 0 && celdasDistintasLRC.length === 0) {
@@ -323,7 +363,7 @@ const detectarErrores = () =>{
     let label = document.getElementById('mensajeError');
     label.textContent= mensajeError;
 
-}
+}*/
 
 //console.log(random(2,0));
 

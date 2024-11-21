@@ -126,6 +126,18 @@ h2{
     margin-bottom: 5vh;
 }
 
+/* Clase para celdas con errores detectados (color general) */
+.error-detected {
+    background-color: rgba(255, 0, 0, 0.3); /* Fondo rojo claro */
+    border: 1px solid red;
+}
+
+/* Clase para la celda exacta del error (color diferente para indicar ubicación precisa) */
+.exact-error {
+    background-color: rgba(242, 223, 55, 0.5); /* Fondo azul claro */
+    border: 2px solid yellow;
+}
+
 .receptor-mensajeError {
     font-size: 3.5vh;
     color: #502;  /* Puedes elegir cualquier color que indique error */
