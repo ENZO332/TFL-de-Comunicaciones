@@ -49,11 +49,11 @@ h2{
 }
 
 .emisor {
-    background-color: #00aaffe9;
+    background-color: #00bbffea;
 }
 
 .receptor {
-    background-color: #0066aae9;
+    background-color: #006fbbe9;
 }
 
 .emisor-labelMensaje{
@@ -140,11 +140,9 @@ h2{
 
 .receptor-mensajeError {
     font-size: 3.5vh;
-    color: #502;  /* Puedes elegir cualquier color que indique error */
+    color: #640022;  /* Puedes elegir cualquier color que indique error */
     font-weight: bold;
     padding: 10px;
-    
-    
     margin-top: 20px;
     text-align: center;
 }
